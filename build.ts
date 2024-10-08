@@ -8,5 +8,5 @@ await Bun.build({
   outdir: outdir,
   format: 'esm',
   minify: true,
-  naming: "mini-vue.js"
+  naming: "mini-vue.esm.js"
 })

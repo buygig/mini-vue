@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .count {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app"></div>
+  <script type="module">
+    import { h, reactive, watchEffect, mount, patch } from './dist/mini-vue.esm.js'
+    const App = {
+      data: reactive({
+        count: 0
+      }),
+      render() {
+        return h('div', {
+          class: 'count',
+          style: 'color:red;',
+          onClick: () => {
+            this.data.count++
+            const count = document.querySelector('.count')
+            if (Math.abs(this.data.count) % 2 === 0) {
+              count.style.color = 'blue'
+            } else {
+              count.style.color = 'red'
+            }
+          }
+        }, String(this.data.count))
+      }
+    }
+
+    function mountApp(component, container) {
+      let isMounted = false
+      let prevVom;
+
+      watchEffect(() => {
+        if (!isMounted) {
+          prevVom = component.render()
+          mount(prevVom, container)
+          isMounted = true
+        } else {
+          const newVdom = component.render()
+          console.log(prevVom, newVdom)
+          patch(prevVom, newVdom)
+          prevVom = newVdom
+        }
+      })
+
+
+    }
+
+    mountApp(App, document.getElementById('app'))
+
+
+  </script>
+</body>
+
+</html>

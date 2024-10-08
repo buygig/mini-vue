@@ -3,7 +3,7 @@ import type { VNode } from './vnode';
 
 export function patch(n1: VNode, n2: VNode) {
   if (n1.tag === n2.tag) {
-    const el = n1.el = n2.el;
+    const el = n2.el = n1.el;
 
     // update props
     const oldProps = n1.props || {};
@@ -11,7 +11,7 @@ export function patch(n1: VNode, n2: VNode) {
     for (const key in newProps) {
       const oldVal = oldProps[key];
       const newVal = newProps[key];
-      if (oldVal !== newVal) {
+      if (newVal !== oldVal) {
         el.setAttribute(key, newVal);
       }
     }
@@ -20,11 +20,9 @@ export function patch(n1: VNode, n2: VNode) {
         el.removeAttribute(key);
       }
     }
-
     // update children
-    const oldChildren = n1.children || [];
-    const newChildren = n2.children || [];
-
+    const oldChildren = n1.children;
+    const newChildren = n2.children;
     if (typeof newChildren === 'string') {
       if (typeof oldChildren === 'string') {
         if (newChildren !== oldChildren) {
@@ -57,6 +55,5 @@ export function patch(n1: VNode, n2: VNode) {
     }
   } else {
     // replace n1 with n2
-
   }
 }
